@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import supertest from "supertest";
 import app from "@/app";
 import faker from "@faker-js/faker";
-import { cleanDb } from "../helpers";
+import { cleanDb, generateValidToken } from "../helpers";
 import { createHotel, createRoom, getAllHotels } from "../factories/hotels-factory";
 import { ticketWithoutHotel } from "../factories";
 
@@ -12,16 +12,28 @@ beforeEach(async ()=> {
 
 const server = supertest(app);
 
-describe('GET /hotels', () => {
+describe('GET /hotel with token invalid', ()=> {
+    it('should respond with status 401 if no token is given', async () => {
+        const response = await server.get('/tickets');
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    it('should respond with status 401 if given token is not valid', async () => {
+        const token = faker.lorem.word();
+        const response = await server.get('/tickets').set('Authorization', `Bearer ${token}`)
+    })
+})
+
+describe('GET /hotels with valid token', () => {
 
     it('should return 404 if there is no subscription, ticket or hotel', async () => {
-        const token = faker.lorem.word();
+        const token = await generateValidToken();
         const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
         expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
     it('should return 402 if ticket is unpaid, remote or does not include hotel', async () => {
-        const token = faker.lorem.word();
+        const token = await generateValidToken();
         const ticket = await ticketWithoutHotel();
 
         const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
@@ -30,7 +42,7 @@ describe('GET /hotels', () => {
     });
 
     it('should return 200 with all hotels', async () => {
-        const token = faker.lorem.word();
+        const token = await generateValidToken();
         const hotels1 = await createHotel();
         const hotels2 = await createHotel();
         const allHotels = await getAllHotels();
@@ -45,17 +57,17 @@ describe('GET /hotels', () => {
     });
 })
 
-describe('GET /hotels/:hotelId',() => {
+describe('GET /hotels/:hotelId with valid token',() => {
 
     it('should return 404 if there is no subscription, ticket or hotel', async () => {
-        const token = faker.lorem.word();
+        const token = await generateValidToken();
         const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);;
         expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
 
     it('should return 402 if ticket is unpaid, remote or does not include hotel', async () => {
-        const token = faker.lorem.word();
+        const token = await generateValidToken();
         const ticket = await ticketWithoutHotel();
 
         const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
@@ -64,19 +76,19 @@ describe('GET /hotels/:hotelId',() => {
 
 
     it('should return 400 if hotelId is not provided', async () => {
-        const token = faker.lorem.word();
+        const token = await generateValidToken();
         const response = await server.get('/hotels/').set('Authorization', `Bearer ${token}`);
         expect(response.status).toBe(httpStatus.BAD_REQUEST);        
     });
 
     it('should return 404 if hotel is not found', async () => {
-        const token = faker.lorem.word();
+        const token = await generateValidToken();
         const response = await server.get('/hotels/99999').set('Authorization', `Bearer ${token}`);
         expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
     it('should return 200 with hotel and rooms', async () => {
-        const token = faker.lorem.word();
+        const token = await generateValidToken();
 
         const hotel = await createHotel();
         const room = await createRoom(hotel.id);

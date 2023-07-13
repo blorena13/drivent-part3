@@ -5,16 +5,23 @@ import hotelRepository from "../../repositories/hotel-repository";
 async function getHotel(userId: number){
 
     const userWithPaymentTrue = await enrollmentRepository.getUserPaymentTrue(userId);
-    if(!userWithPaymentTrue || !userWithPaymentTrue.Ticket || userWithPaymentTrue.Ticket.length === 0){
+    if(!userWithPaymentTrue || userWithPaymentTrue.Ticket.length === 0){
         throw notFoundError();
     }
 
-    const paidTickets = userWithPaymentTrue.Ticket.filter((ticket)=> ticket.status === 'PAID')
-    if( paidTickets.length === 0){
-       throw paymentRequiredError();
+    if(!userWithPaymentTrue.Ticket) {
+        throw paymentRequiredError();
     }
 
+    // const paidTickets = userWithPaymentTrue.Ticket.filter((ticket)=> ticket.status === 'PAID')
+    // if( paidTickets.length === 0){
+    //    throw paymentRequiredError();
+    // }
+
     const hotels = await hotelRepository.getHotel();
+    if(!hotels){
+        throw notFoundError();
+    }
     return hotels;
 }
 
