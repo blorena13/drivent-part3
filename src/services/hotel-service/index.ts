@@ -13,17 +13,18 @@ async function getHotel(userId: number){
         throw paymentRequiredError();
     }
 
-    // const paidTickets = userWithPaymentTrue.Ticket.filter((ticket)=> ticket.status === 'PAID')
-    // if( paidTickets.length === 0){
-    //    throw paymentRequiredError();
-    // }
+    const paidTickets = userWithPaymentTrue.Ticket.filter((ticket)=> ticket.status === 'PAID')
+    if(paidTickets.length === 0){
+       throw paymentRequiredError();
+    }
 
     const hotels = await hotelRepository.getHotel();
-    if(!hotels){
+    if(hotels.length === 0){
         throw notFoundError();
     }
     return hotels;
 }
+
 
 async function getHotelById(hotelId: number, userId: number){
 

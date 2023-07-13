@@ -14,7 +14,7 @@ async function getHotels(req: AuthenticatedRequest, res: Response){
 }
 
 async function getHotelById(req: AuthenticatedRequest, res: Response){
-    const hotelId = req.params;
+    const hotelId = req.params.hotelId;
     const userId = req.userId;
     try{
         const hotel = await hotelService.getHotelById(Number(hotelId), userId);

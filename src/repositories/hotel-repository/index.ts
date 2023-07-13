@@ -33,6 +33,11 @@ async function getById(id: number){
 }
 
 
+async function ticketPaid(){
+
+}
+
+
 const hotelRepository = {
     getHotel,
     getById
