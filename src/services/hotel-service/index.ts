@@ -38,6 +38,11 @@ async function getHotelById(hotelId: number, userId: number){
         throw paymentRequiredError();
     }
 
+    const verifyHotelRooms = await hotelRepository.getHotelsRooms(hotelId);
+    if(!verifyHotelRooms){
+        throw notFoundError();
+    }
+
     const hotel = await hotelRepository.getById(hotelId);
     if(!hotel){
         throw notFoundError();

@@ -5,6 +5,17 @@ async function getHotel(){
     return prisma.hotel.findMany();
 }
 
+async function getHotelsRooms(id: number){
+    return await prisma.hotel.findFirst({
+        where: {
+            id: id
+        },
+        include: {
+            Rooms: true,
+        }
+    });
+}
+
 async function getById(id: number){
     const hotels = await prisma.hotel.findFirst({
         where: {
@@ -91,7 +102,8 @@ const hotelRepository = {
     getById,
     ticketPaid,
     ticketRemote,
-    ticketNotIncludeHotel
+    ticketNotIncludeHotel,
+    getHotelsRooms
 }
 
 export default hotelRepository;
