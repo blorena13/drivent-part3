@@ -39,9 +39,6 @@ async function getUserPaymentTrue(id: number){
       Ticket: {
         include: {
           Payment: true
-        },
-        where: {
-          status: 'PAID'
         }
       }
     }

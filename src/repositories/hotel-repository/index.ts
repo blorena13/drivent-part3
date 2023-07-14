@@ -49,11 +49,49 @@ async function ticketPaid(userId: number){
 
 }
 
+async function ticketRemote(userId: number){
+    return await prisma.ticket.findFirst({
+        where:{
+            Enrollment: {
+                userId: userId
+            },
+            TicketType: {
+                isRemote: true
+            }
+        },
+        include: {
+            TicketType: true,
+            Enrollment: true,
+        }
+    })
+
+}
+
+async function ticketNotIncludeHotel(userId: number){
+    return await prisma.ticket.findFirst({
+        where:{
+            Enrollment: {
+                userId: userId
+            },
+            TicketType: {
+                includesHotel: false
+            }
+        },
+        include: {
+            TicketType: true,
+            Enrollment: true,
+        }
+    })
+
+}
+
 
 const hotelRepository = {
     getHotel,
     getById,
-    ticketPaid
+    ticketPaid,
+    ticketRemote,
+    ticketNotIncludeHotel
 }
 
 export default hotelRepository;

@@ -57,6 +57,7 @@ describe('GET /hotels with valid token', () => {
         
         const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
         expect(response.status).toBe(httpStatus.NOT_FOUND);
+        expect(response.body).toHaveLength(0);
     });
 
     it('should return 402 if ticket is unpaid', async () => {
