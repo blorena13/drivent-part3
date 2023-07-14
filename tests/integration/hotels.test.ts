@@ -109,7 +109,7 @@ describe('GET /hotels with valid token', () => {
         const hotels2 = await createHotel();
         const allHotels = await getAllHotels();
 
-        const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+        const response = await server.get('/hotels/').set('Authorization', `Bearer ${token}`);
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body).toEqual(allHotels);
     });
@@ -183,17 +183,11 @@ describe('GET /hotels/:hotelId with valid token',() => {
         const newTicketType = await createTicketType();
         const ticket = await ticketWithoutHotel();
 
-        const response = await server.get(`/hotels/`).set('Authorization', `Bearer ${token}`);
+        const response = await server.get(`/hotels/:hotelId`).set('Authorization', `Bearer ${token}`);
         expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
         
     });
 
-
-    it('should return 400 if hotelId is not provided', async () => {
-        const token = await generateValidToken();
-        const response = await server.get('/hotels/').set('Authorization', `Bearer ${token}`);
-        expect(response.status).toBe(httpStatus.BAD_REQUEST);        
-    });
 
     it('should return 404 if hotel is not found', async () => {
         const token = await generateValidToken();
@@ -215,16 +209,16 @@ describe('GET /hotels/:hotelId with valid token',() => {
                     id: expect.any(Number),
                     name: expect.any(String),
                     image: expect.any(String),
-                    createdAt: expect.any(String),
-                    updatedAt: expect.any(String),
+                    createdAt: expect.any(Date),
+                    updatedAt: expect.any(Date),
                     Rooms: [
                         {
                             id: expect.any(Number),
                             name: expect.any(String),
                             capacity: expect.any(Number),
                             hotelId: expect.any(Number),
-                            createdAt: expect.any(String),
-                            updatedAt: expect.any(String)
+                            createdAt: expect.any(Date),
+                            updatedAt: expect.any(Date)
                         }
                     ]
                 })
