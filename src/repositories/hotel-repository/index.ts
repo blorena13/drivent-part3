@@ -33,14 +33,27 @@ async function getById(id: number){
 }
 
 
-async function ticketPaid(){
+async function ticketPaid(userId: number){
+    return await prisma.ticket.findFirst({
+        where:{
+            status: 'PAID',
+            Enrollment: {
+                userId: userId
+            }
+        },
+        include: {
+            TicketType: true,
+            Enrollment: true,
+        }
+    })
 
 }
 
 
 const hotelRepository = {
     getHotel,
-    getById
+    getById,
+    ticketPaid
 }
 
 export default hotelRepository;
