@@ -29,11 +29,12 @@ export async function ticketHotelTrue(){
     data: {
       name: faker.name.findName(),
       price: faker.datatype.number(),
-      isRemote: faker.datatype.boolean(),
+      isRemote: false,
       includesHotel: true,
     },
   });
 }
+
 
 export async function ticketRemote(){
   return prisma.ticketType.create({

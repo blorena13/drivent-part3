@@ -186,36 +186,35 @@ describe('GET /hotels/:hotelId with valid token',() => {
 
     it('should return 200 with hotel and rooms', async () => {
         const user = await createUser();
-        const token = await generateValidToken();
+        const token = await generateValidToken(user);
         const enrollmentUser = await createEnrollmentWithAddress(user);
-        const newTicket = await ticketWithoutHotel();
+        const newTicket = await ticketHotelTrue();
         const ticket = await createTicket(enrollmentUser.id ,newTicket.id, TicketStatus.PAID);
 
         const hotel = await createHotel();
-        const room = await createRoom(hotel.id);
+        const hotelId = hotel.id;
+        const room = await createRoom(hotelId);
 
-        const response = await server.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
+        const response = await server.get(`/hotels/${hotelId}`).set('Authorization', `Bearer ${token}`);
         expect(response.status).toBe(httpStatus.OK);
         expect(response.body).toEqual(
-            expect.arrayContaining([
                 expect.objectContaining({
-                    id: expect.any(Number),
-                    name: expect.any(String),
-                    image: expect.any(String),
-                    createdAt: expect.any(String),
-                    updatedAt: expect.any(String),
+                    id: hotel.id,
+                    name: hotel.name,
+                    image: hotel.image,
+                    createdAt: hotel.createdAt.toISOString(),
+                    updatedAt: hotel.updatedAt.toISOString(),
                     Rooms: [
                         {
-                            id: expect.any(Number),
-                            name: expect.any(String),
-                            capacity: expect.any(Number),
-                            hotelId: expect.any(Number),
-                            createdAt: expect.any(String),
-                            updatedAt: expect.any(String)
+                            id: room.id,
+                            name: room.name,
+                            capacity: room.capacity,
+                            hotelId: room.hotelId,
+                            createdAt: room.createdAt.toISOString(),
+                            updatedAt: room.updatedAt.toISOString()
                         }
                     ]
                 })
-            ])
         )
         
     });

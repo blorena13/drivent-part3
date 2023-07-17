@@ -1,3 +1,4 @@
+import { number } from "joi";
 import { notFoundError, paymentRequiredError } from "../../errors";
 import enrollmentRepository from "../../repositories/enrollment-repository";
 import hotelRepository from "../../repositories/hotel-repository";
@@ -20,7 +21,14 @@ async function getHotel(userId: number){
     if(hotels.length === 0 || !hotels){
         throw notFoundError();
     }
-    return hotels;
+
+    return hotels.map((hotel) => ({
+        id: hotel.id,
+        name: hotel.name,
+        image: hotel.image,
+        createdAt: hotel.createdAt.toISOString(),
+        updatedAt: hotel.updatedAt.toISOString()
+    }))
 }
 
 

@@ -30,15 +30,15 @@ async function getById(id: number){
         id: hotels.id,
         name: hotels.name,
         image: hotels.image,
-        createdAt: hotels.createdAt,
-        updatedAt: hotels.updatedAt,
+        createdAt: hotels.createdAt.toISOString(),
+        updatedAt: hotels.updatedAt.toISOString(),
         Rooms: hotels.Rooms.map((room) => ({
             id: room.id,
             name: room.name,
             capacity: room.capacity,
             hotelId: room.hotelId,
-            createdAt: room.createdAt,
-            updatedAt: room.updatedAt
+            createdAt: room.createdAt.toISOString(),
+            updatedAt: room.updatedAt.toISOString()
         }))
     }
 }
