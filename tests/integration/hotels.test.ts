@@ -4,7 +4,7 @@ import app, { init } from "@/app";
 import faker from "@faker-js/faker";
 import { cleanDb, generateValidToken } from "../helpers";
 import { createHotel, createRoom, getAllHotels } from "../factories/hotels-factory";
-import { createEnrollmentWithAddress, createTicket, createTicketType, createUser, ticketRemote, ticketWithoutHotel } from "../factories";
+import { createEnrollmentWithAddress, createTicket, createTicketType, createUser, ticketHotelTrue, ticketRemote, ticketWithoutHotel } from "../factories";
 import { TicketStatus } from "@prisma/client";
 
 beforeAll(async ()=> {
@@ -98,7 +98,7 @@ describe('GET /hotels with valid token', () => {
         const user = await createUser();
         const token = await generateValidToken(user);
         const enrollmentUser = await createEnrollmentWithAddress(user);
-        const newTicketType = await createTicketType();
+        const newTicketType = await ticketHotelTrue();
         const newTicket = await createTicket(enrollmentUser.id ,newTicketType.id, TicketStatus.PAID);
 
         const hotels1 = await createHotel();

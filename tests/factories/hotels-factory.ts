@@ -5,8 +5,10 @@ import { Hotel, Room } from "@prisma/client";
 export async function createHotel(){
     return prisma.hotel.create({
         data: {
+            createdAt: "2023-07-17T13:36:20.552Z",
             name: faker.name.findName(),
             image: faker.image.city(),
+            updatedAt: "2023-07-15T00:05:42.087Z"
         }
     })
 }
